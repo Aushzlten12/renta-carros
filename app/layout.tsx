@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -21,7 +22,8 @@ export default function RootLayout({
       <html lang="en">
         <body className={outfit.className}>
           <NextTopLoader color="#000" />
-          {children}
+          <main className="h-full">{children}</main>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

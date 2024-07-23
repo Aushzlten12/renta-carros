@@ -7,6 +7,7 @@ import { SidebarItem } from "./SidebarItem";
 
 export function SidebarRoutes() {
   const { userId } = useAuth();
+  console.log(userId);
   return (
     <div className="flex flex-col justify-between h-full">
       <div className="h-fit">

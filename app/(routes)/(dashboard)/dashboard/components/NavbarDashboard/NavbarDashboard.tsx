@@ -1,4 +1,11 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { SidebarRoutes } from "../SidebarRoutes";
 import { UserButton } from "@clerk/nextjs";
@@ -12,6 +19,10 @@ export function NavbarDashboard() {
             <Menu />
           </SheetTrigger>
           <SheetContent side="left">
+            <SheetHeader className="m-0 p-0">
+              <SheetTitle>MENU</SheetTitle>
+              <SheetDescription></SheetDescription>
+            </SheetHeader>
             <SidebarRoutes />
           </SheetContent>
         </Sheet>
