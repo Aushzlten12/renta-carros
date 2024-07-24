@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import axios from "axios";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,8 +25,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { formSchema } from "./FormAddCar.form";
+import { UploadButton } from "@/utils/uploadthing";
+import { useState } from "react";
+import { FormAddCarProps } from "./FormAddCar.types";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
-export function FormAddCar() {
+export function FormAddCar(props: FormAddCarProps) {
+  const { setOpenDialog } = props;
+  const [photoUploaded, setPhotoUploaded] = useState(false);
+
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,8 +53,22 @@ export function FormAddCar() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    setOpenDialog(false);
+    try {
+      await axios.post("/api/car", values);
+      toast({
+        title: "Car created ✅",
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        variant: "destructive",
+      });
+    }
   };
+
+  const { isValid } = form.formState;
 
   return (
     <Form {...form}>
@@ -183,8 +208,53 @@ export function FormAddCar() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="photo"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Profile Car Image</FormLabel>
+                <FormControl>
+                  {photoUploaded ? (
+                    <p className="text-sm">Image uploaded!</p>
+                  ) : (
+                    <UploadButton
+                      className="rounded-lg bg-slate-600/20 text-slate-800 outline-dotted outline-3"
+                      {...field}
+                      endpoint="photo"
+                      onClientUploadComplete={(res) => {
+                        form.setValue("photo", res?.[0].url);
+                        setPhotoUploaded(true);
+                      }}
+                      onUploadError={(error: Error) => {
+                        console.log(error);
+                      }}
+                    />
+                  )}
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="priceDay"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price per Day</FormLabel>
+                <FormControl>
+                  <Input placeholder="20$" type="number" {...field} />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="w-full mt-5" disabled={!isValid}>
+          Create new car
+        </Button>
       </form>
     </Form>
   );
