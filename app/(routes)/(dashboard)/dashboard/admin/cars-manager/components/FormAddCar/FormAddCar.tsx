@@ -94,7 +94,25 @@ export function FormAddCar(props: FormAddCarProps) {
               <FormItem>
                 <FormLabel>Power</FormLabel>
                 <FormControl>
-                  <Input placeholder="150 CV" type="number" {...field} />
+                  <Input
+                    placeholder="150 CV"
+                    type="number"
+                    min={10}
+                    max={500}
+                    step={5}
+                    pattern="^[1-9]\d*$"
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value;
+                      const cleanedValue = value.replace(/[^0-9]/g, "");
+                      if (value !== cleanedValue) {
+                        e.target.value = cleanedValue;
+                      }
+                      if (parseInt(e.target.value, 10) > 500) {
+                        e.target.value = "500";
+                      }
+                    }}
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -244,7 +262,25 @@ export function FormAddCar(props: FormAddCarProps) {
               <FormItem>
                 <FormLabel>Price per Day</FormLabel>
                 <FormControl>
-                  <Input placeholder="20$" type="number" {...field} />
+                  <Input
+                    placeholder="20$"
+                    type="number"
+                    min={1}
+                    max={2000}
+                    step={1}
+                    pattern="^[1-9]\d*$"
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value;
+                      const cleanedValue = value.replace(/[^0-9]/g, "");
+                      if (value !== cleanedValue) {
+                        e.target.value = cleanedValue;
+                      }
+                      if (parseInt(e.target.value, 10) > 1000) {
+                        e.target.value = "2000";
+                      }
+                    }}
+                    {...field}
+                  />
                 </FormControl>
                 <FormDescription></FormDescription>
                 <FormMessage />
