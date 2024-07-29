@@ -24,15 +24,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { formSchema } from "./FormAddCar.form";
+import { formSchema } from "./FormEditCar.form";
 import { UploadButton } from "@/utils/uploadthing";
 import { useState } from "react";
-import { FormAddCarProps } from "./FormAddCar.types";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { FormEditCarProps } from "./FormEditCar.types";
 
-export function FormAddCar(props: FormAddCarProps) {
-  const { setOpenDialog } = props;
+export function FormEditCar(props: FormEditCarProps) {
+  const { carData, setOpenDialog } = props;
+
   const [photoUploaded, setPhotoUploaded] = useState(false);
 
   const router = useRouter();
@@ -40,25 +41,24 @@ export function FormAddCar(props: FormAddCarProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      cv: "",
-      transmission: "",
-      people: "",
-      photo: "",
-      engine: "",
-      type: "",
-      priceDay: "",
-      isPublish: false,
+      name: carData.name,
+      cv: carData.cv,
+      transmission: carData.transmission,
+      people: carData.people,
+      photo: carData.photo,
+      engine: carData.engine,
+      type: carData.type,
+      priceDay: carData.priceDay,
+      isPublish: carData.isPublish ? carData.isPublish : false,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setOpenDialog(false);
+
     try {
-      await axios.post("/api/car", values);
-      toast({
-        title: "Car created ✅",
-      });
+      await axios.patch(`/api/car/${carData.id}/form`, values);
+      toast({ title: "Car edited 😀" });
       router.refresh();
     } catch (error) {
       toast({
@@ -289,7 +289,7 @@ export function FormAddCar(props: FormAddCarProps) {
           />
         </div>
         <Button type="submit" className="w-full mt-5" disabled={!isValid}>
-          Create new car
+          Edit car
         </Button>
       </form>
     </Form>

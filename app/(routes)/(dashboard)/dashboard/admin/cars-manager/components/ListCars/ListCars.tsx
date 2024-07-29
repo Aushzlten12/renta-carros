@@ -1,3 +1,13 @@
-export function ListCars() {
-  return <div>ListCars</div>;
+import { CardCar } from "./CardCar";
+import { ListCarsProps } from "./ListCars.types";
+
+export function ListCars(props: ListCarsProps) {
+  const { cars } = props;
+  return (
+    <div className="grid md:grid-cols-2 grid-cols-1 gap-6 my-4 lg:grid-cols-4">
+      {cars.map((car) => (
+        <CardCar key={car.id} car={car} />
+      ))}
+    </div>
+  );
 }
