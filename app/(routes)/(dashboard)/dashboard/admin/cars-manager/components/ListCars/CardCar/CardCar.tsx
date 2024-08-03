@@ -8,24 +8,63 @@ import { useRouter } from "next/navigation";
 
 import { CardCarProps } from "./CardCar.types";
 import { ButtonEditCar } from "./ButtonEditCar";
+import axios from "axios";
 
 export function CardCar(props: CardCarProps) {
   const { car } = props;
+  const router = useRouter();
+
+  const deleteCar = async () => {
+    try {
+      await axios.delete(`/api/car/${car.id}`);
+      toast({
+        title: "Car deleted 😃",
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handlePublishCar = async (publish: boolean) => {
+    try {
+      await axios.patch(`/api/car/${car.id}`, { isPublish: publish });
+      if (publish) {
+        toast({
+          title: "Car published 😀",
+        });
+      } else {
+        toast({
+          title: "Car unpublish 😣",
+        });
+      }
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="relative p-1 bg-white rounded-lg shadow-md hover:shadow-lg min-w-[250px]">
       <Image
         src={car.photo}
         alt={car.name}
-        width={400}
+        width={500}
         height={600}
-        className="mx-auto rounded-lg mt-2"
+        className="mx-auto rounded-lg pt-6"
       />
       {car.isPublish ? (
-        <p className="absolute top-0 right-0 w-full p-1 text-center text-white bg-green-700/90">
+        <p className="absolute top-0 right-0 w-full p-1 text-center text-white bg-green-700/90 rounded-t-lg">
           Published
         </p>
       ) : (
-        <p className="absolute top-0 right-0 w-full p-1 text-center text-white bg-red-300/90">
+        <p className="absolute top-0 right-0 w-full p-1 text-center text-white bg-red-300/90 rounded-t-lg">
           Not Published
         </p>
       )}
@@ -64,11 +103,10 @@ export function CardCar(props: CardCarProps) {
         </div>
 
         <div className="flex justify-between mt-3 gap-x-4">
-          <Button variant="outline" onClick={() => console.log("Delete")}>
+          <Button variant="outline" onClick={deleteCar}>
             Delete
             <Trash className="h-4 w-4 ml-2" />
           </Button>
-
           <ButtonEditCar carData={car} />
         </div>
 
@@ -76,7 +114,7 @@ export function CardCar(props: CardCarProps) {
           <Button
             className="w-full mt-3"
             variant="outline"
-            onClick={() => console.log("Unpublish")}
+            onClick={() => handlePublishCar(false)}
           >
             Unpublish
             <Upload className="w-4 h-4 ml-2" />
@@ -84,7 +122,7 @@ export function CardCar(props: CardCarProps) {
         ) : (
           <Button
             className="w-full mt-3"
-            onClick={() => console.log("Publish")}
+            onClick={() => handlePublishCar(true)}
           >
             Publish
             <Upload className="w-4 h-4 ml-2" />
