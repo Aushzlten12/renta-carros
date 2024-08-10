@@ -29,7 +29,7 @@ export function CalendarSelector(props: CalendarSelectorProps) {
         new Date().getMonth(),
         new Date().getDate()
       ),
-      4
+      5
     ),
   });
 
@@ -80,7 +80,7 @@ export function CalendarSelector(props: CalendarSelectorProps) {
                     {format(date.to, "LLL dd, y")}
                   </>
                 ) : (
-                  format(date.from, "LLL dd, y")
+                  <>{format(date.from, "LLL dd, y")}</>
                 )
               ) : (
                 <span>Pick a date</span>
