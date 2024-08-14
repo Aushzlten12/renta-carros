@@ -4,7 +4,7 @@ import { Car } from "@prisma/client";
 import { ListCarsProps } from "./ListCars.types";
 import Image from "next/image";
 import { Fuel, Gem, Heart, Users, Wrench } from "lucide-react";
-import { ModalAddReservation } from "@/components/Share/ModalAddReservation";
+import { ModalAddReservation } from "@/components/Shared/ModalAddReservation";
 
 export function ListCars(props: ListCarsProps) {
   const { cars } = props;
