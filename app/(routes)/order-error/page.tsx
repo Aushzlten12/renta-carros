@@ -1,8 +1,15 @@
 import { Navbar } from "@/components/Shared/Navbar";
 import { Button } from "@/components/ui/button";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function pageOrderError() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return redirect("/");
+  }
   return (
     <div>
       <Navbar />
